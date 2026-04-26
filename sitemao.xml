@@ -8,30 +8,44 @@
   </url>
 
   <url>
-    <loc>https://brightlane.github.io/ValentinesDayFlowers/saturday-delivery.html</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://brightlane.github.io/ValentinesDayFlowers/sunset-bouquets.html</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://brightlane.github.io/ValentinesDayFlowers/same-day-roses.html</loc>
+    <loc>https://brightlane.github.io/MothersDayFlowers/</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://brightlane.github.io/MothersDayFlowers/</loc>
+    <loc>https://brightlane.github.io/SameDayFlowers/</loc>
     <lastmod>2026-04-26</lastmod>
-    <changefreq>daily</changefreq>
+    <changefreq>always</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://brightlane.github.io/FtdFlowers/</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://brightlane.github.io/ChristmasFlowers/</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://brightlane.github.io/BouquetFlowers/</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://brightlane.github.io/SendFlowersOnline/</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
