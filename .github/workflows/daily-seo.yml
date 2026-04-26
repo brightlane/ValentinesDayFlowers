@@ -3,7 +3,7 @@ name: Daily SEO Content Refresh
 on:
   schedule:
     - cron: '0 0 * * *' # Runs daily at midnight
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch: # This adds the "Run" button for manual testing
 
 jobs:
   build:
@@ -13,7 +13,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/node-setup@v4
+        # FIXED: Changed from actions/node-setup to actions/setup-node
+        uses: actions/setup-node@v4
         with:
           node-version: '24'
 
@@ -25,5 +26,10 @@ jobs:
           git config --global user.name "brightlane-bot"
           git config --global user.email "bot@brightlane.dev"
           git add .
-          git commit -m "Auto-generated daily SEO post: $(date)"
-          git push
+          # Check if there are changes to avoid the "nothing to commit" error
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Auto-generated daily SEO post: $(date)"
+            git push
+          else
+            echo "No new content to commit today."
+          fi
