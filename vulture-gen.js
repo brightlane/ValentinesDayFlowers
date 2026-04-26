@@ -3,16 +3,17 @@ const path = require('path');
 
 const AFFILIATE_ID = "2013017799";
 
-// 1. Check if cities.json exists
-if (!fs.existsSync('cities.json')) {
-    console.error("Error: cities.json not found!");
+// Ensure we are reading from the root
+const citiesPath = path.resolve(__dirname, 'cities.json');
+const outDir = path.resolve(__dirname, 'delivery');
+
+if (!fs.existsSync(citiesPath)) {
+    console.error("Error: cities.json is missing in the root!");
     process.exit(1);
 }
 
-const cities = JSON.parse(fs.readFileSync('cities.json', 'utf8'));
+const cities = JSON.parse(fs.readFileSync(citiesPath, 'utf8'));
 
-// 2. FORCE create delivery directory in the current workspace
-const outDir = path.resolve(__dirname, 'delivery');
 if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
 }
@@ -21,8 +22,10 @@ cities.forEach(item => {
     const slug = `${item.city.toLowerCase().replace(/ /g, '-')}-${item.state.toLowerCase()}-delivery.html`;
     const filePath = path.join(outDir, slug);
     
-    const pageContent = `<!DOCTYPE html>...[Your HTML Code Here]...`;
+    // Minimal template for high-speed generation
+    const html = `<!DOCTYPE html><html><head><title>${item.city} Flowers</title></head><body><h1>Flowers in ${item.city}</h1><a href="https://www.floristone.com/main.cfm?AffiliateID=${AFFILIATE_ID}">Shop Now</a></body></html>`;
 
-    fs.writeFileSync(filePath, pageContent);
-    console.log(`Generated: ${slug}`);
+    fs.writeFileSync(filePath, html);
 });
+
+console.log("Vulture Matrix Generation Complete.");
