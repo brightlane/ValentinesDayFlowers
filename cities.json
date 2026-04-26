@@ -1,0 +1,12 @@
+[
+  {"city": "New York City", "state": "NY", "pop": "19M"},
+  {"city": "Los Angeles", "state": "CA", "pop": "12M"},
+  {"city": "Chicago", "state": "IL", "pop": "9M"},
+  {"city": "Houston", "state": "TX", "pop": "6M"},
+  {"city": "Phoenix", "state": "AZ", "pop": "4.8M"},
+  {"city": "Philadelphia", "state": "PA", "pop": "1.5M"},
+  {"city": "San Antonio", "state": "TX", "pop": "1.5M"},
+  {"city": "San Diego", "state": "CA", "pop": "1.4M"},
+  {"city": "Dallas", "state": "TX", "pop": "1.3M"},
+  {"city": "Jacksonville", "state": "FL", "pop": "1M"}
+]
