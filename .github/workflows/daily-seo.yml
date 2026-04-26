@@ -1,0 +1,29 @@
+name: Daily SEO Content Refresh
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/node-setup@v4
+        with:
+          node-version: '24'
+
+      - name: Generate Blog Post
+        run: node daily-writer.js
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "brightlane-bot"
+          git config --global user.email "bot@brightlane.dev"
+          git add .
+          git commit -m "Auto-generated daily SEO post: $(date)"
+          git push
