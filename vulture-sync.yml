@@ -1,0 +1,4 @@
+- name: Run Vulture Matrix
+        run: |
+          node vulture-gen.js
+          node sitemap-generator.js
