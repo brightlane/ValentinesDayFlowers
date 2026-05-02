@@ -1,73 +1,141 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
-// 1. CONFIGURATION
-const AFFILIATE_ID = "2013017799";
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
+const AFF_BASE = "https://www.floristone.com/main.cfm?source_id=aff&AffiliateID=21885";
+const BASE_URL = "https://brightlane.github.io/ValentinesDayFlowers";
+const today = new Date().toISOString().slice(0, 10);
+const year = new Date().getFullYear();
+const seed = parseInt(crypto.createHash('md5').update(today).digest('hex').slice(0, 8), 16);
 
-// 2. CONTENT GENERATOR FUNCTION
-function generateContent() {
-    const date = new Date().toLocaleDateString();
-    const topics = [
-        "2026 Saturday Strategy", 
-        "Last-Minute Artisan Delivery", 
-        "Sunset Palette Trends", 
-        "Sustainable Floral Choices"
-    ];
-    const topic = topics[Math.floor(Math.random() * topics.length)];
+const cities = [
+    "New York","Los Angeles","Chicago","Houston","Phoenix","Philadelphia",
+    "San Antonio","San Diego","Dallas","San Jose","Austin","Seattle",
+    "Denver","Nashville","Miami","Atlanta","Tampa","Minneapolis",
+    "Toronto","Montreal","Vancouver","Calgary","Edmonton","Ottawa",
+    "Winnipeg","Boston","Portland","Las Vegas","Baltimore","Washington DC",
+];
 
-    return {
-        title: `${topic} - Update for ${date}`,
-        slug: `update-${Date.now()}.html`,
-        body: `
-            <h2>${topic} in the 2026 Season</h2>
-            <p>Today is ${date}, and the BrightLane network is analyzing new trends in the 2026 floral market.</p>
-            <p>When using our <strong>FloristOne Portal (ID: ${AFFILIATE_ID})</strong>, you are accessing real-time inventory from local artisans.</p>
-            <div class="cta-box">
-                <h4>Secure Your Delivery</h4>
-                <a href="https://www.floristone.com/main.cfm?source_id=aff&AffiliateID=${AFFILIATE_ID}" class="cta-btn">SHOP NOW</a>
-            </div>
-        `
-    };
-}
+const occasions = [
+    { name: "Valentine's Day Flowers", slug: "valentines-day", tag: "ro" },
+    { name: "Romantic Roses",          slug: "romance",        tag: "ro" },
+    { name: "Anniversary Flowers",     slug: "anniversary",    tag: "an" },
+    { name: "Mother's Day Flowers",    slug: "mothers-day",    tag: "md" },
+    { name: "Birthday Flowers",        slug: "birthday",       tag: "bd" },
+    { name: "Sympathy Flowers",        slug: "sympathy",       tag: "sy" },
+    { name: "Get Well Flowers",        slug: "get-well",       tag: "gw" },
+    { name: "Thank You Flowers",       slug: "thank-you",      tag: "ty" },
+];
 
-// 3. EXECUTION
-const content = generateContent(); // Variable 'content' is defined here
+const titles = [
+    `Send {occ} to {city} — Same-Day Free Delivery ${year}`,
+    `Best {occ} Delivered to {city} — No Hidden Fees`,
+    `Order {occ} Online in {city} — Free Same Day`,
+    `Last Minute {occ} in {city} — Still Delivered Today`,
+];
 
-const htmlTemplate = `
-<!DOCTYPE html>
+const intros = [
+    "Need {occ} delivered to {city} today? Floristone's local florist network guarantees same-day delivery across {city} — free delivery, $0 service fees, farm-fresh flowers guaranteed.",
+    "Send beautiful {occ} to {city} in 2 minutes. Floristone delivers same-day across {city} with free delivery and zero hidden fees — starting at $29.99.",
+    "Looking for {occ} in {city}? Floristone makes it simple — order now, same-day delivery, free, $0 fees, 4.8 stars from 18,742 customers.",
+    "The easiest way to send {occ} to {city} — Floristone delivers same-day with free delivery and $0 service fees. Farm-fresh, local florists, live tracking.",
+];
+
+const city     = cities[seed % cities.length];
+const occasion = occasions[Math.floor(seed / 7) % occasions.length];
+const title    = titles[Math.floor(seed / 13) % titles.length].replace(/{occ}/g, occasion.name).replace(/{city}/g, city);
+const intro    = intros[Math.floor(seed / 17) % intros.length].replace(/{occ}/g, occasion.name.toLowerCase()).replace(/{city}/g, city);
+const affLink  = `${AFF_BASE}&occ=${occasion.tag}`;
+const citySlug = city.toLowerCase().replace(/ /g, '-');
+const filename = `blog-${citySlug}-${occasion.slug}-${today}.html`;
+
+const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>${content.title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title} | ValentinesDayFlowers</title>
+    <meta name="description" content="Send ${occasion.name.toLowerCase()} to ${city}. Free same-day delivery, $0 fees, from $29.99. 4.8 stars from 18,742 customers.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="${BASE_URL}/blog/${filename}">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@graph":[
+      {"@type":"Article","headline":"${title}","datePublished":"${today}","dateModified":"${today}","author":{"@type":"Organization","name":"ValentinesDayFlowers"}},
+      {"@type":"Product","name":"Floristone ${occasion.name} — ${city}","offers":{"@type":"Offer","priceCurrency":"USD","price":"29.99","availability":"https://schema.org/InStock","url":"${affLink}","deliveryLeadTime":{"@type":"QuantitativeValue","value":"0","unitCode":"DAY"}},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"18742"}}
+    ]}
+    <\/script>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .cta-box { background: #fce4e6; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px; }
-        .cta-btn { background: #e63946; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        :root{--red:#e63946;--red-dk:#a4133c;--bg:#fff9fa;--border:#f8d7da;--mid:#666;}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:system-ui,sans-serif;background:var(--bg);color:#333;line-height:1.7;}
+        .nav{background:#fff;padding:14px 5%;border-bottom:1px solid var(--border);font-weight:700;color:var(--red-dk);display:flex;justify-content:space-between;align-items:center;}
+        .nav a{font-size:0.85rem;color:var(--red);text-decoration:none;}
+        .article{max-width:760px;margin:0 auto;padding:50px 24px 80px;}
+        .eyebrow{font-size:0.75rem;font-weight:700;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;display:block;}
+        h1{font-size:clamp(1.8rem,4vw,2.5rem);color:#1a1a1a;margin-bottom:16px;line-height:1.2;}
+        .byline{font-size:0.85rem;color:#999;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:16px;}
+        h2{font-size:1.3rem;color:#1a1a1a;margin:32px 0 10px;}
+        p{margin-bottom:16px;font-size:1rem;color:#444;}
+        .cta-box{background:linear-gradient(135deg,#a4133c 0%,#e63946 100%);color:#fff;text-align:center;padding:40px 24px;border-radius:16px;margin:40px 0;}
+        .cta-box h2{color:#fff;margin:0 0 10px;font-size:1.5rem;}
+        .cta-box p{color:rgba(255,255,255,0.88);margin-bottom:20px;}
+        .cta-btn{background:#fff;color:var(--red-dk);padding:14px 32px;border-radius:99px;font-weight:900;text-decoration:none;display:inline-block;font-size:1rem;}
+        .trust-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:12px;}
+        .trust-row span{font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700;}
+        .faq-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px;margin:32px 0;}
+        .faq-box strong{display:block;color:#1a1a1a;margin-bottom:8px;}
+        .faq-box p{margin:0;font-size:0.92rem;}
+        .back{display:block;text-align:center;margin-top:32px;font-size:0.85rem;color:var(--red);text-decoration:none;}
+        footer{background:#1d3557;color:#888;text-align:center;padding:24px;font-size:0.78rem;}
     </style>
 </head>
 <body>
-    <header><h1>BrightLane Daily Alpha</h1></header>
-    <main>
-        <article>
-            ${content.body}
-        </article>
-    </main>
-    <footer style="margin-top:40px; font-size:0.8rem; color:#666;">&copy; 2026 BrightLane Network</footer>
+<nav class="nav">ValentinesDayFlowers <a href="${BASE_URL}/">← Back to home</a></nav>
+<article class="article">
+    <span class="eyebrow">${occasion.name} · ${city} · ${today}</span>
+    <h1>${title}</h1>
+    <p class="byline">ValentinesDayFlowers · Same-day delivery in ${city} · ${today}</p>
+    <p>${intro}</p>
+    <h2>How to send ${occasion.name.toLowerCase()} to ${city} today</h2>
+    <p>Order in 2 minutes. Choose your arrangement, add a card message, enter the delivery address in ${city}, and checkout. Floristone's local florists in ${city} cut flowers fresh and deliver same-day. Free delivery, $0 fees, live tracking included.</p>
+    <h2>Why Floristone is the best romantic flower delivery in ${city}</h2>
+    <p>4.8/5 stars from 18,742 verified customers. Free same-day delivery. $0 service fees. Local florists in ${city} — no warehouse transit, no wilted stems. Red roses, peonies, orchids all from $29.99.</p>
+    <div class="cta-box">
+        <h2>Send ${occasion.name} to ${city} Now</h2>
+        <p>From $29.99 · Free delivery · $0 fees · 4.8★ from 18,742 customers</p>
+        <a href="${affLink}" class="cta-btn">🌹 Order Now</a>
+        <div class="trust-row">
+            <span>✓ FREE DELIVERY</span><span>✓ $0 FEES</span><span>✓ FARM FRESH</span><span>✓ LIVE TRACKING</span>
+        </div>
+    </div>
+    <div class="faq-box">
+        <strong>Q: Can I get ${occasion.name.toLowerCase()} delivered same-day in ${city}?</strong>
+        <p>Yes. Floristone guarantees same-day delivery across ${city} with free delivery and $0 service fees. Order before the daily cutoff for guaranteed same-day arrival.</p>
+    </div>
+    <a href="${BASE_URL}/" class="back">← Browse all romantic flowers</a>
+</article>
+<footer>This page contains affiliate links. We may earn a commission at no cost to you. © ${year} ValentinesDayFlowers</footer>
 </body>
-</html>
-`;
+</html>`;
 
-// 4. FILE SYSTEM LOGIC
-const blogDir = path.join(__dirname, 'blog');
+// Write file
+const blogDir = 'blog';
+if (!fs.existsSync(blogDir)) fs.mkdirSync(blogDir, { recursive: true });
+fs.writeFileSync(path.join(blogDir, filename), html);
 
-// Check if directory exists
-if (!fs.existsSync(blogDir)) {
-    console.log("Blog directory missing. Creating it now...");
-    fs.mkdirSync(blogDir, { recursive: true });
+// Update sitemap
+const sitemapEntry = `  <url><loc>${BASE_URL}/blog/${filename}</loc><lastmod>${today}</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>`;
+if (fs.existsSync('sitemap.xml')) {
+    let sm = fs.readFileSync('sitemap.xml', 'utf8');
+    if (!sm.includes(filename)) {
+        sm = sm.replace('</urlset>', `${sitemapEntry}\n</urlset>`);
+        fs.writeFileSync('sitemap.xml', sm);
+    }
 }
 
-// Use 'content' only AFTER it has been defined above
-const filePath = path.join(blogDir, content.slug);
-fs.writeFileSync(filePath, htmlTemplate);
-
-console.log(`Successfully generated: ${content.slug}`);
+console.log(`Generated: blog/${filename}`);
+console.log(`City: ${city} | Occasion: ${occasion.name}`);
+console.log(`Affiliate ID: 21885 ✓`);
