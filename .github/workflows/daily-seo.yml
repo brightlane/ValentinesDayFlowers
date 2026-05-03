@@ -1,0 +1,62 @@
+.github/workflows/daily-seo.ymlname: Daily SEO Content Refresh
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Git config
+        run: |
+          git config user.name "brightlane-bot"
+          git config user.email "bot@brightlane.dev"
+
+      - name: Pull latest
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Generate daily blog post
+        run: node daily-writer.js
+
+      - name: Run Vulture Matrix city pages
+        run: node vulture-gen.js
+
+      - name: Run multilingual Bing blast
+        run: node vday_bing_blast.js
+
+      - name: Generate llms.txt
+        run: node vday_llms_generator.js
+
+      - name: Generate sitemap
+        run: node generate_sitemap.js
+
+      - name: Commit and push
+        run: |
+          git add .
+          git diff --staged --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Daily update [$(date +'%Y-%m-%d')]"
+          git fetch origin main
+          if git rebase -X theirs origin/main; then
+            git push origin main && exit 0
+          fi
+          git rebase --abort || true
+          git reset --hard origin/main
+          git add .
+          git diff --staged --quiet && exit 0
+          git commit -m "Daily update (retry) [$(date +'%Y-%m-%d')]"
+          git push origin main
