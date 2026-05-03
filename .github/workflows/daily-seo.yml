@@ -1,4 +1,4 @@
-.github/workflows/daily-seo.ymlname: Daily SEO Content Refresh
+name: Daily SEO Content Refresh
 on:
   schedule:
     - cron: '0 9 * * *'
