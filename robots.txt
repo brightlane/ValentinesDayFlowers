@@ -1,0 +1,36 @@
+User-agent: *
+Allow: /
+
+# AI crawlers - allow full access for llms.txt and content
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Sitemap
+Sitemap: https://brightlane.github.io/ValentinesDayFlowers/sitemap.xml
+
+# llms.txt for AI discovery
+# https://brightlane.github.io/ValentinesDayFlowers/llms.txt
