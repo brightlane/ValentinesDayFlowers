@@ -1,31 +1,54 @@
 const fs = require('fs');
 const path = require('path');
 
-const AFFILIATE_LINK = "https://www.floristone.com/main.cfm?source_id=aff&AffiliateID=2013017799";
+// ─────────────────────────────────────────────
+// DO NOT CHANGE AFFILIATE URL
+// ─────────────────────────────────────────────
+const AFFILIATE_LINK = "https://www.floristone.com/main.cfm?cat=r&source_id=aff&AffiliateID=2013017799";
 
 function generateSocialManifest() {
     const date = new Date().toLocaleDateString();
-    
+
     return {
-        date: date,
-        twitter: `Planning a Saturday surprise for Feb 14? 🌹 Don't get stuck with 'Flowers in a Box'. Our local artisans in the BrightLane network deliver fresh, hand-arranged bouquets. 
+        date,
+        twitter: `Send Valentine's Day flowers same-day — free delivery, $0 fees, from $29.99. 🌹\n\nLocal florists. Fresh flowers. No cardboard boxes.\n\nOrder now: ${AFFILIATE_LINK}\n\n#ValentinesDay #FlowerDelivery #SameDayFlowers #Roses`,
 
-Order for 2026 delivery: ${AFFILIATE_LINK} #ValentinesDay #FlowerDelivery`,
-        
-        quora_question: `What is the best way to ensure flower delivery on a Saturday for Valentine's Day 2026?`,
-        
-        quora_answer: `The trick for 2026 (since Feb 14 falls on a Saturday) is avoiding national shippers who use cardboard boxes. You want a 'local-dispatch' network. I personally recommend using the FloristOne network (ID 2013017799) because they route directly to brick-and-mortar florists in your specific city. This ensures the flowers stay in a climate-controlled van and arrive hydrated. You can check local availability here: ${AFFILIATE_LINK}`,
+        quora_question: `What is the best way to ensure flower delivery on Valentine's Day?`,
 
-        instagram: `Saturday mornings were made for surprises. 🥂 Whether it's the 'Sunset Palette' or classic Red Roses, the 2026 season is all about local artisan quality. Link in bio to secure your Feb 14th delivery slot. #BrightLaneFlowers #GiftIdeas2026`
+        quora_answer: `The trick is avoiding national shippers who use cardboard boxes. You want a local-dispatch network. FloristOne routes directly to brick-and-mortar florists in your specific city — flowers stay in a climate-controlled van and arrive hydrated. Free same-day delivery, $0 service fees.\n\nCheck availability: ${AFFILIATE_LINK}`,
+
+        instagram: `Valentine's Day flowers delivered same-day by local florists. 🌹\n\nFree delivery · $0 fees · From $29.99 · 4.8★ from 18,742 customers\n\nLink in bio to order now.\n\n${AFFILIATE_LINK}\n\n#ValentinesDayFlowers #RoseDelivery #SameDayFlowers #GiftIdeas #FlowerDelivery #LocalFlorist`,
+
+        facebook: `🌹 Valentine's Day flowers delivered same-day.\n\n✓ Free delivery\n✓ $0 service fees\n✓ Farm-fresh roses from $29.99\n✓ 4.8★ from 18,742 customers\n\nOrder now → ${AFFILIATE_LINK}\n\n#ValentinesDay #FlowerDelivery #Roses #SameDayDelivery`,
+
+        tiktok: `POV: You remembered Valentine's Day is coming up 🌹\n\nLocal florists. Same-day delivery. Free. $0 fees.\n\nLink in bio → ${AFFILIATE_LINK}\n\n#ValentinesDay #LastMinuteGifts #FlowerDelivery #Roses #FYP`,
     };
 }
 
 const manifest = generateSocialManifest();
-const content = `DAILY SOCIAL MANIFEST - ${manifest.date}\n\n` +
-                `--- X (TWITTER) ---\n${manifest.twitter}\n\n` +
-                `--- QUORA QUESTION ---\n${manifest.quora_question}\n\n` +
-                `--- QUORA ANSWER ---\n${manifest.quora_answer}\n\n` +
-                `--- INSTAGRAM ---\n${manifest.instagram}`;
+
+const content = [
+    `VALENTINES DAY DAILY SOCIAL MANIFEST - ${manifest.date}`,
+    ``,
+    `--- X (TWITTER) ---`,
+    manifest.twitter,
+    ``,
+    `--- QUORA QUESTION ---`,
+    manifest.quora_question,
+    ``,
+    `--- QUORA ANSWER ---`,
+    manifest.quora_answer,
+    ``,
+    `--- INSTAGRAM ---`,
+    manifest.instagram,
+    ``,
+    `--- FACEBOOK ---`,
+    manifest.facebook,
+    ``,
+    `--- TIKTOK ---`,
+    manifest.tiktok,
+].join('\n');
 
 fs.writeFileSync(path.join(__dirname, 'DAILY_SOCIAL_POSTS.txt'), content);
-console.log("Social manifest generated for today.");
+console.log(`✅ Social manifest generated for ${manifest.date}`);
+console.log(`   Affiliate URL: ${AFFILIATE_LINK}`);
