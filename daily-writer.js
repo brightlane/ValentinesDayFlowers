@@ -3,14 +3,17 @@ const path = require('path');
 const crypto = require('crypto');
 
 // ─────────────────────────────────────────────
-// CONFIG
+// CONFIG — DO NOT CHANGE AFFILIATE URL
 // ─────────────────────────────────────────────
-const AFF_BASE = "https://www.floristone.com/main.cfm?source_id=aff&AffiliateID=21885";
+const AFF_URL  = "https://www.floristone.com/main.cfm?cat=r&source_id=aff&AffiliateID=2013017799";
 const BASE_URL = "https://brightlane.github.io/ValentinesDayFlowers";
-const today = new Date().toISOString().slice(0, 10);
-const year = new Date().getFullYear();
-const seed = parseInt(crypto.createHash('md5').update(today).digest('hex').slice(0, 8), 16);
+const today    = new Date().toISOString().slice(0, 10);
+const year     = new Date().getFullYear();
+const seed     = parseInt(crypto.createHash('md5').update(today).digest('hex').slice(0, 8), 16);
 
+// ─────────────────────────────────────────────
+// CONTENT POOLS
+// ─────────────────────────────────────────────
 const cities = [
     "New York","Los Angeles","Chicago","Houston","Phoenix","Philadelphia",
     "San Antonio","San Diego","Dallas","San Jose","Austin","Seattle",
@@ -20,14 +23,14 @@ const cities = [
 ];
 
 const occasions = [
-    { name: "Valentine's Day Flowers", slug: "valentines-day", tag: "ro" },
-    { name: "Romantic Roses",          slug: "romance",        tag: "ro" },
-    { name: "Anniversary Flowers",     slug: "anniversary",    tag: "an" },
-    { name: "Mother's Day Flowers",    slug: "mothers-day",    tag: "md" },
-    { name: "Birthday Flowers",        slug: "birthday",       tag: "bd" },
-    { name: "Sympathy Flowers",        slug: "sympathy",       tag: "sy" },
-    { name: "Get Well Flowers",        slug: "get-well",       tag: "gw" },
-    { name: "Thank You Flowers",       slug: "thank-you",      tag: "ty" },
+    { name: "Valentine's Day Flowers", slug: "valentines-day" },
+    { name: "Romantic Roses",          slug: "romance" },
+    { name: "Anniversary Flowers",     slug: "anniversary" },
+    { name: "Mother's Day Flowers",    slug: "mothers-day" },
+    { name: "Birthday Flowers",        slug: "birthday" },
+    { name: "Sympathy Flowers",        slug: "sympathy" },
+    { name: "Get Well Flowers",        slug: "get-well" },
+    { name: "Thank You Flowers",       slug: "thank-you" },
 ];
 
 const titles = [
@@ -44,14 +47,34 @@ const intros = [
     "The easiest way to send {occ} to {city} — Floristone delivers same-day with free delivery and $0 service fees. Farm-fresh, local florists, live tracking.",
 ];
 
+// ─────────────────────────────────────────────
+// CROSS-LINKS
+// ─────────────────────────────────────────────
+const RELATED_SITES = [
+    { name: "Send Flowers Online",     url: "https://brightlane.github.io/SendFlowersOnline/" },
+    { name: "Mother's Day Flowers",    url: "https://brightlane.github.io/MothersDayFlowers/" },
+    { name: "Bouquet Flowers",         url: "https://brightlane.github.io/BouquetFlowers/" },
+    { name: "FTD Flowers",             url: "https://brightlane.github.io/FtdFlowers/" },
+    { name: "Same Day Flowers",        url: "https://brightlane.github.io/SameDayFlowers/" },
+    { name: "Christmas Flowers",       url: "https://brightlane.github.io/ChristmasFlowers/" },
+    { name: "Flower Delivery",         url: "https://brightlane.github.io/FlowerDelivery/" },
+    { name: "Same Day Florist",        url: "https://brightlane.github.io/SameDayFlorist/" },
+];
+const relatedHTML = RELATED_SITES.map(s => `<a href="${s.url}">${s.name}</a>`).join(' &nbsp;|&nbsp; ');
+
+// ─────────────────────────────────────────────
+// PICK TODAY'S CONTENT
+// ─────────────────────────────────────────────
 const city     = cities[seed % cities.length];
 const occasion = occasions[Math.floor(seed / 7) % occasions.length];
 const title    = titles[Math.floor(seed / 13) % titles.length].replace(/{occ}/g, occasion.name).replace(/{city}/g, city);
 const intro    = intros[Math.floor(seed / 17) % intros.length].replace(/{occ}/g, occasion.name.toLowerCase()).replace(/{city}/g, city);
-const affLink  = `${AFF_BASE}&occ=${occasion.tag}`;
 const citySlug = city.toLowerCase().replace(/ /g, '-');
 const filename = `blog-${citySlug}-${occasion.slug}-${today}.html`;
 
+// ─────────────────────────────────────────────
+// HTML
+// ─────────────────────────────────────────────
 const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,11 +87,11 @@ const html = `<!DOCTYPE html>
     <script type="application/ld+json">
     {"@context":"https://schema.org","@graph":[
       {"@type":"Article","headline":"${title}","datePublished":"${today}","dateModified":"${today}","author":{"@type":"Organization","name":"ValentinesDayFlowers"}},
-      {"@type":"Product","name":"Floristone ${occasion.name} — ${city}","offers":{"@type":"Offer","priceCurrency":"USD","price":"29.99","availability":"https://schema.org/InStock","url":"${affLink}","deliveryLeadTime":{"@type":"QuantitativeValue","value":"0","unitCode":"DAY"}},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"18742"}}
+      {"@type":"Product","name":"Floristone ${occasion.name} — ${city}","offers":{"@type":"Offer","priceCurrency":"USD","price":"29.99","availability":"https://schema.org/InStock","url":"${AFF_URL}","deliveryLeadTime":{"@type":"QuantitativeValue","value":"0","unitCode":"DAY"}},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"18742"}}
     ]}
     <\/script>
     <style>
-        :root{--red:#e63946;--red-dk:#a4133c;--bg:#fff9fa;--border:#f8d7da;--mid:#666;}
+        :root{--red:#e63946;--red-dk:#a4133c;--bg:#fff9fa;--border:#f8d7da;}
         *{box-sizing:border-box;margin:0;padding:0;}
         body{font-family:system-ui,sans-serif;background:var(--bg);color:#333;line-height:1.7;}
         .nav{background:#fff;padding:14px 5%;border-bottom:1px solid var(--border);font-weight:700;color:var(--red-dk);display:flex;justify-content:space-between;align-items:center;}
@@ -88,6 +111,9 @@ const html = `<!DOCTYPE html>
         .faq-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px;margin:32px 0;}
         .faq-box strong{display:block;color:#1a1a1a;margin-bottom:8px;}
         .faq-box p{margin:0;font-size:0.92rem;}
+        .related{background:#fff;border-top:1px solid var(--border);padding:20px 24px;text-align:center;font-size:0.82rem;}
+        .related a{color:var(--red);text-decoration:none;font-weight:600;}
+        .related a:hover{text-decoration:underline;}
         .back{display:block;text-align:center;margin-top:32px;font-size:0.85rem;color:var(--red);text-decoration:none;}
         footer{background:#1d3557;color:#888;text-align:center;padding:24px;font-size:0.78rem;}
     </style>
@@ -106,7 +132,7 @@ const html = `<!DOCTYPE html>
     <div class="cta-box">
         <h2>Send ${occasion.name} to ${city} Now</h2>
         <p>From $29.99 · Free delivery · $0 fees · 4.8★ from 18,742 customers</p>
-        <a href="${affLink}" class="cta-btn">🌹 Order Now</a>
+        <a href="${AFF_URL}" class="cta-btn" target="_blank" rel="nofollow sponsored noopener">🌹 Order Now</a>
         <div class="trust-row">
             <span>✓ FREE DELIVERY</span><span>✓ $0 FEES</span><span>✓ FARM FRESH</span><span>✓ LIVE TRACKING</span>
         </div>
@@ -115,27 +141,24 @@ const html = `<!DOCTYPE html>
         <strong>Q: Can I get ${occasion.name.toLowerCase()} delivered same-day in ${city}?</strong>
         <p>Yes. Floristone guarantees same-day delivery across ${city} with free delivery and $0 service fees. Order before the daily cutoff for guaranteed same-day arrival.</p>
     </div>
+    <a href="${AFF_URL}" class="back" target="_blank" rel="nofollow sponsored noopener">→ Browse all ${occasion.name.toLowerCase()} on Floristone</a>
     <a href="${BASE_URL}/" class="back">← Browse all romantic flowers</a>
 </article>
+<div class="related">
+    <strong>More Flower Delivery Sites:</strong><br><br>
+    ${relatedHTML}
+</div>
 <footer>This page contains affiliate links. We may earn a commission at no cost to you. © ${year} ValentinesDayFlowers</footer>
 </body>
 </html>`;
 
-// Write file
+// ─────────────────────────────────────────────
+// WRITE FILE
+// ─────────────────────────────────────────────
 const blogDir = 'blog';
 if (!fs.existsSync(blogDir)) fs.mkdirSync(blogDir, { recursive: true });
 fs.writeFileSync(path.join(blogDir, filename), html);
 
-// Update sitemap
-const sitemapEntry = `  <url><loc>${BASE_URL}/blog/${filename}</loc><lastmod>${today}</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>`;
-if (fs.existsSync('sitemap.xml')) {
-    let sm = fs.readFileSync('sitemap.xml', 'utf8');
-    if (!sm.includes(filename)) {
-        sm = sm.replace('</urlset>', `${sitemapEntry}\n</urlset>`);
-        fs.writeFileSync('sitemap.xml', sm);
-    }
-}
-
 console.log(`Generated: blog/${filename}`);
 console.log(`City: ${city} | Occasion: ${occasion.name}`);
-console.log(`Affiliate ID: 21885 ✓`);
+console.log(`Affiliate URL: ${AFF_URL}`);
