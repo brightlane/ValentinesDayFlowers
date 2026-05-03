@@ -1,35 +1,61 @@
 name: Daily SEO Content Refresh
-
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight
-  workflow_dispatch: # This adds the "Run" button for manual testing
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
-        # FIXED: Changed from actions/node-setup to actions/setup-node
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
 
-      - name: Generate Blog Post
+      - name: Git config
+        run: |
+          git config user.name "brightlane-bot"
+          git config user.email "bot@brightlane.dev"
+
+      - name: Pull latest
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Install dependencies
+        run: npm install axios --no-save
+
+      - name: Generate daily blog post
         run: node daily-writer.js
 
-      - name: Commit and Push
+      - name: Run Vulture Matrix
+        run: node vulture-gen.js
+
+      - name: Run multilingual Bing blast
+        run: node vday_bing_blast.js
+
+      - name: Commit and push
         run: |
-          git config --global user.name "brightlane-bot"
-          git config --global user.email "bot@brightlane.dev"
           git add .
-          # Check if there are changes to avoid the "nothing to commit" error
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Auto-generated daily SEO post: $(date)"
-            git push
-          else
-            echo "No new content to commit today."
+          git diff --staged --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Daily update [$(date +'%Y-%m-%d')]"
+          git fetch origin main
+          if git rebase -X theirs origin/main; then
+            git push origin main && exit 0
           fi
+          git rebase --abort || true
+          git reset --hard origin/main
+          git add .
+          git diff --staged --quiet && exit 0
+          git commit -m "Daily update (retry) [$(date +'%Y-%m-%d')]"
+          git push origin main
