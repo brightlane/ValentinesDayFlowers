@@ -2,10 +2,22 @@
   "program": "Floristone",
   "affiliate_id": "2013017799",
   "base_url": "https://www.floristone.com/main.cfm",
-  "site_url": "https://brightlane.github.io/SameDayFlowers/",
-  "occasions": ["mothers-day","sympathy","birthday","get-well","anniversary","romance","thank-you","new-baby"],
-  "pricing": {"starting_from": 29.99, "service_fees": 0},
-  "ratings": {"score": 4.8, "review_count": 18742},
-  "affiliate_link": "http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799",
-  "last_updated": "2026-05-02"
+  "params": { "cat": "r", "source_id": "aff", "AffiliateID": "2013017799" },
+  "full_url": "https://www.floristone.com/main.cfm?cat=r&source_id=aff&AffiliateID=2013017799",
+  "site_url": "https://brightlane.github.io/ValentinesDayFlowers/",
+  "occasions": ["valentines-day","romance","anniversary","birthday","sympathy","get-well","thank-you","new-baby"],
+  "pricing": { "starting_from": 29.99, "service_fees": 0 },
+  "ratings": { "score": 4.8, "review_count": 18742 },
+  "properties": [
+    "https://brightlane.github.io/SendFlowersOnline/",
+    "https://brightlane.github.io/MothersDayFlowers/",
+    "https://brightlane.github.io/BouquetFlowers/",
+    "https://brightlane.github.io/ValentinesDayFlowers/",
+    "https://brightlane.github.io/FtdFlowers/",
+    "https://brightlane.github.io/SameDayFlowers/",
+    "https://brightlane.github.io/ChristmasFlowers/",
+    "https://brightlane.github.io/FlowerDelivery/",
+    "https://brightlane.github.io/SameDayFlorist/"
+  ],
+  "last_updated": "2026-05-03"
 }
